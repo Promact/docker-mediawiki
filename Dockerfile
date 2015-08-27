@@ -20,8 +20,8 @@ RUN apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys B97B0AFCAA1A4
 
 ENV PG_MAJOR 9.4
 ENV PG_VERSION 9.4.4-1.pgdg80+1
-
-RUN apt-get install postgresql-client postgresql-devel
+RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
+RUN apt-get install postgresql-client postgresql-dev
 RUN apt-get update && apt-get install -y \
         libfreetype6-dev \
         libjpeg62-turbo-dev \
