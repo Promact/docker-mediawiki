@@ -40,3 +40,4 @@ RUN apt-get update && apt-get install -y \
 
 COPY mediawiki-1.25.1/ /var/www/html/
 EXPOSE 80
+CMD ["apache2-foreground"]
