@@ -4,8 +4,6 @@ mwlib:
     - "8899:8001"
 parsoid: 
   build: ./parsoid/
-  links: 
-    - web
   ports: 
     - "8000:8000"
 pgdb: 
