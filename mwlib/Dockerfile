@@ -4,7 +4,7 @@ ENV HOME            /root
 ENV LC_ALL          C.UTF-8
 ENV LANG            en_US.UTF-8
 ENV LANGUAGE        en_US.UTF-8
-RUN apt-get update && apt-get install imagemagick libmagick++-dev libgraphicsmagick1-dev libjpeg-dev libjpeg-turbo8-dev libjpeg62-dev libjpeg8-dev zlib1g-dev libfreetype6-dev libxft-dev libffi-dev gcc g++ make libz-dev libfreetype6-dev liblcms-dev libxml2-dev libxslt-dev ocaml-nox git-core python-imaging python-lxml\
+RUN apt-get update && apt-get install imagemagick libmagick++-dev libgraphicsmagick1-dev libjpeg-dev zlib1g-dev libfreetype6-dev libxft-dev libffi-dev gcc g++ make libz-dev libfreetype6-dev liblcms1-dev liblcms2-dev libxml2-dev libxslt-dev ocaml-nox git-core python-imaging python-lxml\
  texlive-latex-recommended ploticus dvipng imagemagick -y
 
 RUN pip install --trusted-host pypi.pediapress.com -i http://pypi.pediapress.com/simple/ mwlib && \
