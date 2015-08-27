@@ -10,8 +10,7 @@ parsoid:
     - "8000:8000"
 pgdb: 
   environment: 
-    - 
-      POSTGRES_PASSWORD: welcome@123
+    - "POSTGRES_PASSWORD: welcome@123"
   image: "postgres:latest"
 web: 
   build: "."
