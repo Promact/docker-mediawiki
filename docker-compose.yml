@@ -1,0 +1,24 @@
+web:
+  build: .
+  ports:
+   - "80:80"
+  volumes:
+   - /home/root/resources:/var/www/html/resources
+  links:
+   - pgdb
+   - parsoid
+   - mwlib
+pgdb:
+  image: postgres:latest
+  environment:
+  - POSTGRES_PASSWORD: welcome@123
+parsoid:
+  build: ./parsoid/
+  ports:
+   - "8000:8000"
+  links:
+   - web
+mwlib:
+  build: ./mwlib/
+  ports: 
+   - "8899:8001"   
