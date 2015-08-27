@@ -16,7 +16,7 @@ ADD supervisord.conf /etc/
  
 EXPOSE 8899
 
-CMD["/usr/local/bin/supervisord","-c","/etc/supervisord.conf"]
+CMD ["/usr/local/bin/supervisord","-c","/etc/supervisord.conf"]
 
 
 
