@@ -14,7 +14,7 @@ RUN git clone \
 WORKDIR /usr/src/parsoid/api
 
 # generate localsettings.js
-RUN sed "s|'http://localhost/w|process.env.MW_URL + '|" < localsettings.js.example > localsettings.js
+RUN sed "s|'http://localhost/w|process.env.MW_URL + '|" < ../localsettings.js.example > localsettings.js
 
 EXPOSE 8000
 CMD ["node","/usr/src/parsoid/api/server.js"]
