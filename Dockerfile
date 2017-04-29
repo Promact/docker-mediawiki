@@ -1,9 +1,9 @@
-FROM php:5.6-apache
+FROM php:7.1-apache
 # grab gosu for easy step-down from root
 RUN gpg --keyserver pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4036A9C25BF357DD4
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates wget && rm -rf /var/lib/apt/lists/* \
-	&& wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/1.2/gosu-$(dpkg --print-architecture)" \
-	&& wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/1.2/gosu-$(dpkg --print-architecture).asc" \
+	&& wget -O /usr/local/bin/gosu "https://github.com/tianon/gosu/releases/download/1.10/gosu-$(dpkg --print-architecture)" \
+	&& wget -O /usr/local/bin/gosu.asc "https://github.com/tianon/gosu/releases/download/1.10/gosu-$(dpkg --print-architecture).asc" \
 	&& gpg --verify /usr/local/bin/gosu.asc \
 	&& rm /usr/local/bin/gosu.asc \
 	&& chmod +x /usr/local/bin/gosu \
@@ -20,6 +20,9 @@ RUN apt-key adv --keyserver ha.pool.sks-keyservers.net --recv-keys B97B0AFCAA1A4
 
 ENV PG_MAJOR 9.4
 ENV PG_VERSION 9.4.4-1.pgdg80+1
+ENV MEDIAWIKI_VERSION 1.28
+ENV MEDIAWIKI_FULL_VERSION 1.28.1
+ENV VISUALEDITOR_VERSION REL1_28
 RUN echo 'deb http://apt.postgresql.org/pub/repos/apt/ jessie-pgdg main' $PG_MAJOR > /etc/apt/sources.list.d/pgdg.list
 RUN apt-get update && apt-get install postgresql-client-9.4 libpq-dev postgresql-contrib-9.4 -y
 RUN apt-get update && apt-get install -y \
@@ -38,6 +41,20 @@ RUN apt-get update && apt-get install -y \
 	&& docker-php-ext-install json \
 	&& docker-php-ext-install xml
 
-COPY mediawiki-1.25.1/ /var/www/html/
+RUN MEDIAWIKI_DOWNLOAD_URL="https://releases.wikimedia.org/mediawiki/$MEDIAWIKI_VERSION/mediawiki-$MEDIAWIKI_FULL_VERSION.tar.gz"; \
+    set -x; \
+    mkdir -p /usr/src/mediawiki \
+    && curl -fSL "$MEDIAWIKI_DOWNLOAD_URL" -o mediawiki.tar.gz \
+    && curl -fSL "${MEDIAWIKI_DOWNLOAD_URL}.sig" -o mediawiki.tar.gz.sig \
+    && gpg --verify mediawiki.tar.gz.sig \
+    && tar -xf mediawiki.tar.gz -C /usr/src/mediawiki --strip-components=1
+
+RUN cd /usr/src/mediawiki/extensions \
+	&& git clone https://gerrit.wikimedia.org/r/mediawiki/extensions/Collection \
+	&& git clone https://gerrit.wikimedia.org/r/p/mediawiki/extensions/UniversalLanguageSelector.git \
+    && git clone -b $VISUALEDITOR_VERSION https://gerrit.wikimedia.org/r/p/mediawiki/extensions/VisualEditor.git \
+	&& cd VisualEditor \
+	&& git submodule --init
+	
 EXPOSE 80
 CMD ["apache2-foreground"]
